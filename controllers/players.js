@@ -1,38 +1,6 @@
 const mongodb = require('../data/database');
 const ObjectId = require('mongodb').ObjectId;
 
-const getAll = async (req, res) => {
-  try {
-    const result = await mongodb.getDb().db().collection('players').find();
-
-    result.toArray().then((players) => {
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json(players);
-    });
-  } catch (err) {
-    res.status(500).json(err);
-  }
-};
-
-const getSingle = async (req, res) => {
-  try {
-    const playerId = new ObjectId(req.params.id);
-
-    const result = await mongodb
-      .getDb()
-      .db()
-      .collection('players')
-      .find({ _id: playerId });
-
-    result.toArray().then((players) => {
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).json(players[0]);
-    });
-  } catch (err) {
-    res.status(500).json(err);
-  }
-};
-
 const validatePlayer = (player) => {
   if (
     !player.firstName ||
@@ -48,6 +16,43 @@ const validatePlayer = (player) => {
   return null;
 };
 
+// GET ALL
+const getAll = async (req, res) => {
+  try {
+    const result = await mongodb.getDb().collection('players').find();
+
+    const players = await result.toArray();
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).json(players);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// GET ONE
+const getSingle = async (req, res) => {
+  try {
+    const playerId = new ObjectId(req.params.id);
+
+    const result = await mongodb
+      .getDb()
+      .collection('players')
+      .find({ _id: playerId });
+
+    const players = await result.toArray();
+
+    if (!players.length) {
+      return res.status(404).json({ message: "Player not found" });
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).json(players[0]);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// CREATE
 const createPlayer = async (req, res) => {
   try {
     const player = {
@@ -69,20 +74,16 @@ const createPlayer = async (req, res) => {
 
     const response = await mongodb
       .getDb()
-      .db()
       .collection('players')
       .insertOne(player);
 
-    if (response.acknowledged) {
-      res.status(201).json(response);
-    } else {
-      res.status(500).json({ message: "Failed to create player" });
-    }
+    res.status(201).json(response);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
+// UPDATE
 const updatePlayer = async (req, res) => {
   try {
     const playerId = new ObjectId(req.params.id);
@@ -106,7 +107,6 @@ const updatePlayer = async (req, res) => {
 
     const response = await mongodb
       .getDb()
-      .db()
       .collection('players')
       .replaceOne({ _id: playerId }, player);
 
@@ -120,23 +120,23 @@ const updatePlayer = async (req, res) => {
   }
 };
 
+// DELETE
 const deletePlayer = async (req, res) => {
   try {
     const playerId = new ObjectId(req.params.id);
 
     const response = await mongodb
       .getDb()
-      .db()
       .collection('players')
       .deleteOne({ _id: playerId });
 
     if (response.deletedCount > 0) {
       res.status(200).send();
     } else {
-      res.status(500).json(response.error || 'Some error occurred');
+      res.status(404).json({ message: "Player not found" });
     }
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json({ message: err.message });
   }
 };
 
