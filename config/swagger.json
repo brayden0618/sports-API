@@ -1,0 +1,271 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Sports API",
+    "version": "1.0.0",
+    "description": "A CRUD API for managing sports players and teams"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Players",
+      "description": "Player management endpoints"
+    },
+    {
+      "name": "Teams",
+      "description": "Team management endpoints"
+    }
+  ],
+  "paths": {
+    "/players": {
+      "get": {
+        "tags": ["Players"],
+        "summary": "Get all players",
+        "responses": {
+          "200": {
+            "description": "List of players"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Players"],
+        "summary": "Create a new player",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": { "type": "string" },
+                  "lastName": { "type": "string" },
+                  "age": { "type": "number" },
+                  "team": { "type": "string" },
+                  "position": { "type": "string" },
+                  "jerseyNumber": { "type": "number" },
+                  "nationality": { "type": "string" },
+                  "goals": { "type": "number" },
+                  "assists": { "type": "number" }
+                },
+                "required": ["firstName", "lastName", "team", "position"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Player created successfully"
+          },
+          "400": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/players/{id}": {
+      "get": {
+        "tags": ["Players"],
+        "summary": "Get a single player",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Player found"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Players"],
+        "summary": "Update a player",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": { "type": "string" },
+                  "lastName": { "type": "string" },
+                  "age": { "type": "number" },
+                  "team": { "type": "string" },
+                  "position": { "type": "string" },
+                  "jerseyNumber": { "type": "number" },
+                  "nationality": { "type": "string" },
+                  "goals": { "type": "number" },
+                  "assists": { "type": "number" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Player updated"
+          },
+          "400": {
+            "description": "Validation error"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Players"],
+        "summary": "Delete a player",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Player deleted"
+          }
+        }
+      }
+    },
+    "/teams": {
+      "get": {
+        "tags": ["Teams"],
+        "summary": "Get all teams",
+        "responses": {
+          "200": {
+            "description": "List of teams"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Teams"],
+        "summary": "Create a new team",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "city": { "type": "string" },
+                  "founded": { "type": "number" },
+                  "coach": { "type": "string" }
+                },
+                "required": ["name", "city", "coach"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Team created"
+          },
+          "400": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/teams/{id}": {
+      "get": {
+        "tags": ["Teams"],
+        "summary": "Get a single team",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Team found"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Teams"],
+        "summary": "Update a team",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "city": { "type": "string" },
+                  "founded": { "type": "number" },
+                  "coach": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Team updated"
+          },
+          "400": {
+            "description": "Validation error"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Teams"],
+        "summary": "Delete a team",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Team deleted"
+          }
+        }
+      }
+    }
+  }
+}

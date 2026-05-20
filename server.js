@@ -1,13 +1,13 @@
 const express = require('express');
 const mongodb = require('./data/database');
 const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./config/swagger');
+const swaggerDocument = require('./config/swagger.json');
 
 const app = express();
 
 app.use(express.json());
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/', require('./routes'));
 
