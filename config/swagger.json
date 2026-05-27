@@ -5,12 +5,28 @@
     "version": "1.0.0",
     "description": "A CRUD API for managing sports players and teams"
   },
+
   "servers": [
     {
       "url": "https://sports-api-qzqe.onrender.com"
     }
   ],
+
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+
   "tags": [
+    {
+      "name": "Auth",
+      "description": "Authentication endpoints"
+    },
     {
       "name": "Players",
       "description": "Player management endpoints"
@@ -20,8 +36,79 @@
       "description": "Team management endpoints"
     }
   ],
+
   "paths": {
+
+    "/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Register a new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully"
+          },
+          "400": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Login user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "JWT token returned"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          }
+        }
+      }
+    },
+
     "/players": {
+
       "get": {
         "tags": ["Players"],
         "summary": "Get all players",
@@ -31,9 +118,17 @@
           }
         }
       },
+
       "post": {
         "tags": ["Players"],
         "summary": "Create a new player",
+
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+
         "requestBody": {
           "required": true,
           "content": {
@@ -51,25 +146,37 @@
                   "goals": { "type": "number" },
                   "assists": { "type": "number" }
                 },
-                "required": ["firstName", "lastName", "team", "position"]
+                "required": [
+                  "firstName",
+                  "lastName",
+                  "team",
+                  "position"
+                ]
               }
             }
           }
         },
+
         "responses": {
           "201": {
             "description": "Player created successfully"
           },
           "400": {
             "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
     },
+
     "/players/{id}": {
+
       "get": {
         "tags": ["Players"],
         "summary": "Get a single player",
+
         "parameters": [
           {
             "name": "id",
@@ -80,15 +187,24 @@
             }
           }
         ],
+
         "responses": {
           "200": {
             "description": "Player found"
           }
         }
       },
+
       "put": {
         "tags": ["Players"],
         "summary": "Update a player",
+
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+
         "parameters": [
           {
             "name": "id",
@@ -99,6 +215,7 @@
             }
           }
         ],
+
         "requestBody": {
           "required": true,
           "content": {
@@ -120,18 +237,30 @@
             }
           }
         },
+
         "responses": {
           "204": {
             "description": "Player updated"
           },
           "400": {
             "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       },
+
       "delete": {
         "tags": ["Players"],
         "summary": "Delete a player",
+
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+
         "parameters": [
           {
             "name": "id",
@@ -142,14 +271,20 @@
             }
           }
         ],
+
         "responses": {
           "200": {
             "description": "Player deleted"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
     },
+
     "/teams": {
+
       "get": {
         "tags": ["Teams"],
         "summary": "Get all teams",
@@ -159,9 +294,17 @@
           }
         }
       },
+
       "post": {
         "tags": ["Teams"],
         "summary": "Create a new team",
+
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+
         "requestBody": {
           "required": true,
           "content": {
@@ -179,20 +322,27 @@
             }
           }
         },
+
         "responses": {
           "201": {
             "description": "Team created"
           },
           "400": {
             "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
     },
+
     "/teams/{id}": {
+
       "get": {
         "tags": ["Teams"],
         "summary": "Get a single team",
+
         "parameters": [
           {
             "name": "id",
@@ -203,15 +353,24 @@
             }
           }
         ],
+
         "responses": {
           "200": {
             "description": "Team found"
           }
         }
       },
+
       "put": {
         "tags": ["Teams"],
         "summary": "Update a team",
+
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+
         "parameters": [
           {
             "name": "id",
@@ -222,6 +381,7 @@
             }
           }
         ],
+
         "requestBody": {
           "required": true,
           "content": {
@@ -238,18 +398,30 @@
             }
           }
         },
+
         "responses": {
           "204": {
             "description": "Team updated"
           },
           "400": {
             "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       },
+
       "delete": {
         "tags": ["Teams"],
         "summary": "Delete a team",
+
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+
         "parameters": [
           {
             "name": "id",
@@ -260,9 +432,13 @@
             }
           }
         ],
+
         "responses": {
           "200": {
             "description": "Team deleted"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }

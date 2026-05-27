@@ -2,8 +2,13 @@ const express = require('express');
 const mongodb = require('./data/database');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./config/swagger.json');
+const authRoutes = require('./routes/auth');
+
+require('dotenv').config();
 
 const app = express();
+
+app.use('/auth', authRoutes);
 
 app.use(express.json());
 
