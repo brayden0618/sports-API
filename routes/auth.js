@@ -20,7 +20,6 @@ router.post('/register', async (req, res) => {
 
     const response = await mongodb
       .getDb()
-      .db()
       .collection('users')
       .insertOne(user);
 
@@ -43,7 +42,6 @@ router.post('/login', async (req, res) => {
 
     const user = await mongodb
       .getDb()
-      .db()
       .collection('users')
       .findOne({
         username: req.body.username
