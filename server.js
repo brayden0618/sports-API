@@ -8,9 +8,9 @@ require('dotenv').config();
 
 const app = express();
 
-app.use('/auth', authRoutes);
-
 app.use(express.json());
+
+app.use('/auth', authRoutes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
